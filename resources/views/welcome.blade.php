@@ -3,74 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Livewire - Vanessa Campo</title>
-    
-    <link rel="stylesheet" href="https://jsdelivr.net">
-    
+    <title>Livewire CRUD Blog</title>
+    <!-- Stile interno autonomo per la Homepage e le Card -->
     <style>
-        body { background-color: #f4f6f9 !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .bg-dark { background-color: #1e2229 !important; }
-        .text-warning { color: #ffbc00 !important; }
+        body { font-family: sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
         
-        .navbar-custom { background-color: #1e2229; padding: 18px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .navbar-container { max-width: 1140px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-links a { color: #f8f9fa; text-decoration: none; margin-right: 25px; font-weight: 600; font-size: 15px; transition: color 0.2s; }
-        .nav-links a:hover { color: #ffbc00; }
-        
-        .btn-warning { background-color: #ffbc00 !important; color: #1e2229 !important; font-weight: 700; border: none; padding: 8px 20px; border-radius: 6px; text-decoration: none; box-shadow: 0 2px 6px rgba(255,188,0,0.3); transition: all 0.2s; display: inline-block; }
-        .btn-warning:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(255,188,0,0.4); }
-        
-        .card-dark { background-color: #1e2229 !important; color: white !important; padding: 35px; border-radius: 14px; border: 1px solid rgba(255,188,0,0.3); max-width: 650px; margin: 40px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .form-label { font-weight: 600; font-size: 15px; margin-bottom: 8px; display: block; }
-        
-        .form-control { background-color: #2b303c !important; color: white !important; border: 1px solid #454d5e !important; border-radius: 8px; padding: 12px; width: 100%; box-sizing: border-box; display: block; margin-top: 5px; margin-bottom: 20px; transition: border-color 0.2s; }
-        .form-control:focus { border-color: #ffbc00 !important; outline: none; box-shadow: 0 0 0 3px rgba(255,188,0,0.15); }
-        
-        input[type="file"].form-control { padding: 10px; color: #adb5bd; }
-        .main-container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+        /* Stile della Navbar superiore */
+        .barra-nav { background-color: #212529; padding: 15px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .nav-contenitore { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-logo { color: #ffc107; font-weight: bold; text-decoration: none; font-size: 20px; }
+        .nav-menu { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
+        .nav-item { margin-left: 20px; }
+        .nav-link { color: #f8f9fa; text-decoration: none; font-size: 15px; }
+        .nav-link:hover { color: #ffc107; }
+        .btn-nav-acc { border: 1px solid #f8f9fa; padding: 6px 15px; border-radius: 4px; }
+        .btn-nav-reg { background-color: #ffc107; color: #212529; padding: 6px 15px; border-radius: 4px; font-weight: bold; }
+        .btn-nav-reg:hover { background-color: #e0a800; }
+        .btn-logout { background: none; border: 1px solid #dc3545; color: #dc3545; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
+        .btn-logout:hover { background-color: #dc3545; color: white; }
+
+        /* Stile della sezione centrale */
+        .hero-sezione { max-width: 800px; margin: 40px auto 20px auto; background: white; padding: 45px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #dee2e6; text-align: center; }
+        h1 { color: #212529; font-size: 36px; margin-bottom: 15px; }
+        .sottotitolo { color: #6c757d; font-size: 18px; margin-bottom: 30px; line-height: 1.6; }
+        .linea { max-width: 150px; border: 0; height: 1px; background: #dee2e6; margin: 20px auto; }
+        .bottone-scrivi { display: inline-block; padding: 12px 30px; background-color: #0d6efd; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: none; cursor: pointer; }
+        .bottone-scrivi:hover { background-color: #0b5ed7; }
+
+        /* Stile della griglia degli articoli inferiore */
+        .sezione-articoli { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .titolo-sezione { font-size: 24px; color: #212529; margin-bottom: 20px; font-weight: bold; text-align: center; }
     </style>
-    
     @livewireStyles
 </head>
 <body>
 
-    <nav class="navbar-custom">
-        <div class="navbar-container">
-            <a href="/" style="color: #ffbc00; text-decoration: none; font-weight: 800; font-size: 24px; letter-spacing: -0.5px;">🐘 Blog Livewire 2</a>
-            <div class="nav-links d-flex align-items-center">
-                <a href="/">Homepage</a>
-                <a href="/articoli">Tutti gli Articoli</a>
-                <a class="btn btn-warning" href="/articolo/nuovo">✍️ Scrivi Articolo</a>
-            </div>
+    <!-- 1. BARRA DI NAVIGAZIONE SCURA ED ELEGANTE -->
+    <nav class="barra-nav">
+        <div class="nav-contenitore">
+            <a href="{{ route('homepage') }}" class="nav-logo">📝 LivewireCRUD</a>
+            <ul class="nav-menu">
+                <li><a href="{{ route('homepage') }}" class="nav-link">Home</a></li>
+                @auth
+                    <li class="nav-item"><a href="{{ route('article.index') }}" class="nav-link">Tutti gli articoli</a></li>
+                    <li class="nav-item"><a href="{{ route('article.create') }}" class="nav-link text-info">+ Nuovo Articolo</a></li>
+                    <li class="nav-item"><span class="nav-link" style="color: #ffc107;">Ciao, <strong>{{ Auth::user()->name }}</strong> 👋</span></li>
+                    <li class="nav-item">
+                        <form action="/logout" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="btn-logout">Logout</button>
+                        </form>
+                    </li>
+                @else
+                    <li class="nav-item"><a href="{{ route('login') }}" class="nav-link btn-nav-acc">Accedi</a></li>
+                    <li class="nav-item"><a href="{{ route('register') }}" class="nav-link btn-nav-reg">Registrati</a></li>
+                @endauth
+            </ul>
         </div>
     </nav>
 
-    <main class="main-container mt-4">
-        @if(isset($component) && $component == 'article-create')
-            <div class="card-dark">
-                @livewire('article-create')
-            </div>
-        @elseif(isset($component) && $component == 'article-index')
-            <div class="py-4">
-                @livewire('article-index')
-            </div>
-        @elseif(isset($component) && $component == 'article-edit')
-            <div class="card-dark">
-                @livewire('article-edit', ['article' => $article])
-            </div>
-        @else
-            <div style="text-align: center; margin-top: 60px; background-color: white; padding: 60px 40px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); border: 1px solid #e9ecef;">
-                <h1 style="font-size: 42px; font-weight: 800; color: #1e2229; margin-bottom: 20px; letter-spacing: -1px;">Esercizio CRUD Livewire 2</h1>
-                <p style="font-size: 18px; color: #6c757d; max-width: 700px; margin: 0 auto 35px auto; line-height: 1.6;">Benvenuta nell'applicazione per la gestione degli articoli del blog completo di immagini e validazioni in tempo reale realizzato da Vanessa Campo.</p>
-                <div style="display: flex; justify-content: center; gap: 20px;">
-                    <a href="/articolo/nuovo" class="btn btn-warning" style="font-size: 16px; padding: 12px 30px;">Inizia a scrivere</a>
-                    <a href="/articoli" class="btn btn-warning" style="background-color: #1e2229 !important; color: white !important; font-size: 16px; padding: 12px 30px;">Vedi articoli</a>
-                </div>
-            </div>
-        @endif
-    </main>
+    <!-- 2. PANNELLO CENTRALE GRAFICO ALLINEATO ALLA TRACCIA -->
+    <div class="hero-sezione">
+        <h1>Benvenuta nel tuo Blog Livewire! 🚀</h1>
+        <p class="sottotitolo">L'applicazione CRUD completa con caricamento immagini e relazioni utente è attiva e configurata al 100% sul tuo computer locale.</p>
+        <div class="linea"></div>
+        
+        <div style="margin-top: 30px;">
+            @auth
+                <a href="{{ route('article.create') }}" class="bottone-scrivi">Inizia a scrivere</a>
+            @else
+                <p style="color: #6c757d; margin-bottom: 20px; font-size: 15px;">Accedi o registrati per inserire i tuoi articoli nel blog.</p>
+                <a href="{{ route('login') }}" class="bottone-scrivi">Inizia a scrivere</a>
+            @endauth
+        </div>
+    </div>
+
+    <!-- 3. SEZIONE INFERIORE CHE INIETTA L'ELENCO COMPLETO DEGLI ARTICOLI -->
+    <div class="sezione-articoli">
+        <h2 class="titolo-sezione">📚 Elenco degli Articoli Pubblicati</h2>
+        @livewire('article-index')
+    </div>
 
     @livewireScripts
-    <script src="https://jsdelivr.net"></script>
 </body>
 </html>

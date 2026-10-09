@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('body');
-            $table->string('img')->nullable(); // La colonna fondamentale per salvare la foto richiesta dalla traccia
+            $table->string('img');
+            
+            // COLONNA FONDAMENTALE DI RELAZIONE AGGIUNTA PER LA TRACCIA
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

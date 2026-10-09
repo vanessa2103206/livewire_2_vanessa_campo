@@ -1,39 +1,41 @@
-<div>
-    <h2 class="text-center mb-4 fw-bold" style="color: #ffbc00;">Inserisci il tuo articolo!</h2>
+<div style="font-family: sans-serif; display: flex; justify-content: center; align-items: center; padding: 20px 0;">
+    <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #dee2e6; width: 100%; max-width: 500px;">
+        <h2 style="text-align: center; color: #212529; margin-bottom: 24px; font-size: 24px;">📝 Inserisci un nuovo articolo</h2>
 
-    <!-- Banner verde di successo visibile all'istante -->
-    @if (session()->has('successMessage'))
-        <div style="background-color: #d1e7dd; color: #0f5132; padding: 14px; border-radius: 8px; border: 1px solid #badbcc; text-align: center; font-weight: 700; margin-bottom: 25px; font-size: 15px;">
-            ✅ {{ session('successMessage') }}
-        </div>
-    @endif
-
-    <form wire:submit.prevent="articleStore" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label class="form-label" style="color: #ffbc00;">Titolo dell'Articolo</label>
-            <input type="text" wire:model="title" class="form-control">
-            @error('title') <span class="text-danger small fw-bold d-block" style="margin-top: -15px; margin-bottom: 15px;">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" style="color: #ffbc00;">Descrizione</label>
-            <textarea wire:model="body" rows="5" class="form-control"></textarea>
-            @error('body') <span class="text-danger small fw-bold d-block" style="margin-top: -15px; margin-bottom: 15px;">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label" style="color: #ffbc00;">Inserisci una immagine</label>
-            <input type="file" wire:model="img" class="form-control">
-            @error('img') <span class="text-danger small fw-bold d-block" style="margin-top: -15px; margin-bottom: 15px;">{{ $message }}</span> @enderror
-
-            @if ($img)
-                <div class="mt-3 text-center">
-                    <p class="text-muted small">Anteprima della foto selezionata:</p>
-                    <img src="{{ $img->temporaryUrl() }}" style="max-height: 150px; border-radius: 8px; border: 2px solid #ffbc00; object-fit: cover; width: 100%; max-width: 250px;">
+        <form wire:submit.prevent="articleStore">
+            @csrf
+            
+            @if ($errors->any())
+                <div style="background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 4px; border: 1px solid #f5c6cb; margin-bottom: 20px; font-size: 14px;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
-        </div>
 
-        <button type="submit" class="btn btn-warning w-100 py-2">Salva Articolo</button>
-    </form>
+            <div style="margin-bottom: 16px;">
+                <label for="title" style="display: block; font-weight: bold; margin-bottom: 6px; color: #495057; font-size: 14px;">Titolo Articolo:</label>
+                <!-- Aggiunto .blur per blindare il testo -->
+                <input type="text" id="title" wire:model.blur="title" placeholder="Inserisci il titolo" style="width: 95%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="body" style="display: block; font-weight: bold; margin-bottom: 6px; color: #495057; font-size: 14px;">Descrizione / Contenuto:</label>
+                <!-- Aggiunto .blur per blindare la descrizione -->
+                <textarea id="body" cols="30" rows="6" wire:model.blur="body" placeholder="Scrivi il contenuto dell'articolo..." style="width: 95%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label for="img" style="display: block; font-weight: bold; margin-bottom: 6px; color: #495057; font-size: 14px;">Immagine di copertina:</label>
+                <input type="file" id="img" wire:model="img" style="width: 95%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #fff;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="submit" style="width: 100%; padding: 12px; background-color: #0d6efd; border: none; border-radius: 4px; font-weight: bold; color: white; cursor: pointer; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Pubblica Articolo</button>
+                <a href="{{ route('homepage') }}" style="display: block; text-align: center; color: #6c757d; text-decoration: none; font-size: 14px; margin-top: 5px;">← Annulla e torna alla Home</a>
+            </div>
+        </form>
+    </div>
 </div>

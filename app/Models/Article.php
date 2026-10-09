@@ -9,10 +9,12 @@ class Article extends Model
 {
     use HasFactory;
 
-    // Sblocchiamo i campi per il salvataggio sicuro nel database richiesto da Laravel
     protected $fillable = [
-        'title',
-        'body',
-        'img'
+        'title', 'body', 'img', 'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
